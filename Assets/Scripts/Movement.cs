@@ -20,17 +20,17 @@ public class Movement : MonoBehaviour
     {
         InitRot = transform.rotation;
         InitPos = transform.position;
-        Movementspeed = 1f;
+        Movementspeed = 50f;
         offsetY = transform.position.y - plane1.position.y;
 
     }
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
 
-        Move(-horizontal, -vertical, 1);
+        Move(-horizontal, -vertical, Time.deltaTime);
 
         if (Input.GetButton("Fire1"))
         {
@@ -77,7 +77,11 @@ public class Movement : MonoBehaviour
             transform.rotation = InitRot;
 
             Quaternion rotation = Quaternion.FromToRotation(transform.up, hit.normal);
+            
             transform.Rotate(rotation.eulerAngles, Space.World);
+
+            // Terugrotatie
+            transform.Rotate(0,-rotation.eulerAngles.y,0, Space.World);
 
             if (hit.transform.position.y != offsetY)
             {
